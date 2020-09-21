@@ -91,7 +91,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomPadding: false, //Avoid widgets resize when keyboard appears
-        appBar: AppBar(title: Text("Vision CIDIS"),),
+        //appBar: AppBar(title: Text("Vision CIDIS"),),
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -102,7 +102,9 @@ class LoginPage extends StatelessWidget {
           ),
          child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
+          child: Padding(
+            padding: EdgeInsets.only(top: 250.0), //To move the textbox and buttons down
+           child: Column(
             children: <Widget>[
               TextField(
                 controller: _usernameController,
@@ -156,9 +158,18 @@ class LoginPage extends StatelessWidget {
                       }
                     }
                   },
-                  child: Text("Sign Up")
-              )
+                  child: Text("Sign Up"),
+              ),
+
+              FlatButton(
+                onPressed: () {
+                  //Do something when pressed the button
+                },
+                child: Text("Next")
+              ),
+
             ],
+          ),
           ),
         )
         )
