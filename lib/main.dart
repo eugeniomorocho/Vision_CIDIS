@@ -97,7 +97,6 @@ class LoginPage extends StatelessWidget {
             image: DecorationImage(
               image: AssetImage("assets/MAIN.jpg"),
               fit: BoxFit.fill,
-              //fit: BoxFit.cover,
            ),
           ),
          child: Padding(
@@ -164,6 +163,10 @@ class LoginPage extends StatelessWidget {
               FlatButton(
                 onPressed: () {
                   //Do something when pressed the button
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PantallaOpciones()),
+                  );
                 },
                 child: Text("Next")
               ),
@@ -212,3 +215,54 @@ class HomePage extends StatelessWidget {
         ),
       );
 }
+
+
+class PantallaOpciones extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomPadding: false, //Avoid widgets resize when keyboard appears
+      appBar: AppBar(
+        title: Text("Vision CIDIS"),
+        backgroundColor: Colors.black,
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/TEMPLATE.jpg"),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: GridView.count(
+                crossAxisCount: 2,
+                childAspectRatio: 1.0,
+                padding: const EdgeInsets.all(4.0),
+                mainAxisSpacing: 4.0,
+                crossAxisSpacing: 4.0,
+            children: <Widget>[
+              Card(
+                child: Text('Detect'),
+              ),
+              Card(
+                child: Text('Gallery'),
+              ),
+              Card(
+                child: Text('Results'),
+              ),
+              Card(
+                child: Text('Settings'),
+              ),
+            ]
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
