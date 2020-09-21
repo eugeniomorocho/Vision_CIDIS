@@ -1,109 +1,203 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert' show json, base64, ascii;
+
+const SERVER_IP = 'http://192.168.1.247:3000';
+final storage = FlutterSecureStorage();
 
 void main() {
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   // Widget root.
+  Future<String> get jwtOrEmpty async {
+    var jwt = await storage.read(key: "jwt");
+    if(jwt == null) return "";
+    return jwt;
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Authentication Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: FutureBuilder(
+          future: jwtOrEmpty,
+          builder: (context, snapshot) {
+            if(!snapshot.hasData) return CircularProgressIndicator();
+            if(snapshot.data != "") {
+              var str = snapshot.data;
+              var jwt = str.split(".");
+
+              if(jwt.length !=3) {
+                return LoginPage();
+              } else {
+                var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
+                if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
+                  return HomePage(str, payload);
+                } else {
+                  return LoginPage();
+                }
+              }
+            } else {
+              return LoginPage();
+            }
+          }
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class LoginPage extends StatelessWidget {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  void displayDialog(context, title, text) => showDialog(
+    context: context,
+    builder: (context) =>
+        AlertDialog(
+            title: Text(title),
+            content: Text(text)
+        ),
+  );
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  Future<String> attemptLogIn(String username, String password) async {
+    var res = await http.post(
+        "$SERVER_IP/login",
+        body: {
+          "username": username,
+          "password": password
+        }
+    );
+    if(res.statusCode == 200) return res.body;
+    return null;
+  }
 
-  final String title;
+  Future<int> attemptSignUp(String username, String password) async {
+    var res = await http.post(
+        '$SERVER_IP/signup',
+        body: {
+          "username": username,
+          "password": password
+        }
+    );
+    return res.statusCode;
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: AssetImage(''),
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pressed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        resizeToAvoidBottomPadding: false, //Avoid widgets resize when keyboard appears
+        appBar: AppBar(title: Text("Vision CIDIS"),),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/MAIN.jpg"),
+              fit: BoxFit.fill,
+              //fit: BoxFit.cover,
+           ),
+          ),
+         child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                    labelText: 'Username'
+                ),
+              ),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                    labelText: 'Password'
+                ),
+              ),
+              FlatButton(
+                  onPressed: () async {
+                    var username = _usernameController.text;
+                    var password = _passwordController.text;
+                    var jwt = await attemptLogIn(username, password);
+                    if(jwt != null) {
+                      storage.write(key: "jwt", value: jwt);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePage.fromBase64(jwt)
+                          )
+                      );
+                    } else {
+                      displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
+                    }
+                  },
+                  child: Text("Log In")
+              ),
+              FlatButton(
+                  onPressed: () async {
+                    var username = _usernameController.text;
+                    var password = _passwordController.text;
+
+                    if(username.length < 4)
+                      displayDialog(context, "Invalid Username", "The username should be at least 4 characters long");
+                    else if(password.length < 4)
+                      displayDialog(context, "Invalid Password", "The password should be at least 4 characters long");
+                    else{
+                      var res = await attemptSignUp(username, password);
+                      if(res == 201)
+                        displayDialog(context, "Success", "The user was created. Log in now.");
+                      else if(res == 409)
+                        displayDialog(context, "That username is already registered", "Please try to sign up using another username or log in if you already have an account.");
+                      else {
+                        displayDialog(context, "Error", "An unknown error occurred.");
+                      }
+                    }
+                  },
+                  child: Text("Sign Up")
+              )
+            ],
+          ),
+        )
+        )
     );
   }
+}
+
+class HomePage extends StatelessWidget {
+  HomePage(this.jwt, this.payload);
+
+  factory HomePage.fromBase64(String jwt) =>
+      HomePage(
+          jwt,
+          json.decode(
+              ascii.decode(
+                  base64.decode(base64.normalize(jwt.split(".")[1]))
+              )
+          )
+      );
+
+  final String jwt;
+  final Map<String, dynamic> payload;
+
+  @override
+  Widget build(BuildContext context) =>
+      Scaffold(
+        appBar: AppBar(title: Text("Secret Data Screen")),
+        body: Center(
+          child: FutureBuilder(
+              future: http.read('$SERVER_IP/data', headers: {"Authorization": jwt}),
+              builder: (context, snapshot) =>
+              snapshot.hasData ?
+              Column(children: <Widget>[
+                Text("${payload['username']}, here's the data:"),
+                Text(snapshot.data, style: Theme.of(context).textTheme.display1)
+              ],)
+                  :
+              snapshot.hasError ? Text("An error occurred") : CircularProgressIndicator()
+          ),
+        ),
+      );
 }
