@@ -327,8 +327,13 @@ class PantallaOpciones extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              child: Text('Eugenio Morocho'),
+            UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                radius: 20.0,
+                backgroundImage: AssetImage("assets/unnamed.jpg"),
+              ),
+              accountName: Text("Eugenio Morocho Cayamcela"),
+              accountEmail: Text("maneumor@espol.edu.ec"),
               decoration: BoxDecoration(
                 color: Colors.black45,
               ),
@@ -337,17 +342,24 @@ class PantallaOpciones extends StatelessWidget {
             //   title: Text('Item 1'),
             //   onTap: () {},
             // ),
+
             ListTile(
+              leading: const Icon(Icons.exit_to_app),
               title: Text('Logout'),
-              onTap: () {},
+             onTap: () {},
             ),
           ],
         ),
       ),
 
+
     );
   }
 }
+
+
+
+
 
 
 
