@@ -228,6 +228,7 @@ class PantallaOpciones extends StatelessWidget {
         centerTitle: true,
       ),
       body: Container(
+        alignment: Alignment.center, //Centra las cards verticalmente
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/TEMPLATE.jpg"),
@@ -235,6 +236,7 @@ class PantallaOpciones extends StatelessWidget {
           ),
         ),
         child: GridView.count(
+            shrinkWrap: true, //Centra las cards verticalmente
                 crossAxisCount: 2,
                 childAspectRatio: 1.0,
                 padding: const EdgeInsets.all(4.0),
@@ -242,23 +244,114 @@ class PantallaOpciones extends StatelessWidget {
                 crossAxisSpacing: 4.0,
             children: <Widget>[
               Card(
-                child: Text('Detect'),
+                color: Colors.white70,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 35.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                          'DETECT',
+                          style: TextStyle(fontSize: 14.0),
+                      ),
+                      Icon(
+                          Icons.camera_alt,
+                          color: Colors.black,
+                          size: 75.0,
+                      ),
+                    ],
+                  ),
+                )
               ),
               Card(
-                child: Text('Gallery'),
+                color: Colors.white70,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 35.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                          'GALLERY',
+                          style: TextStyle(fontSize: 14.0),
+                      ),
+                      Icon(
+                          Icons.photo_library,
+                          color: Colors.black,
+                          size: 75.0,
+                      ),
+                    ]
+                  ),
+                )
               ),
               Card(
-                child: Text('Results'),
+                  color: Colors.white70,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 35.0),
+                    child: Column(
+                        children: <Widget>[
+                          Text(
+                              'RESULTS',
+                              style: TextStyle(fontSize: 14.0),
+                          ),
+                          Icon(
+                              Icons.assignment,
+                              color: Colors.black,
+                              size: 75.0,
+                          ),
+                        ]
+                    ),
+                  )
               ),
               Card(
-                child: Text('Settings'),
+                  color: Colors.white70,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 35.0),
+                    child: Column(
+                        children: <Widget>[
+                          Text(
+                              'SETTINGS',
+                               style: TextStyle(fontSize: 14.0),
+                          ),
+                          Icon(
+                              Icons.settings,
+                              color: Colors.black,
+                              size: 75.0,
+                          ),
+                        ]
+                    ),
+                  )
               ),
             ]
         ),
       ),
+
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Eugenio Morocho'),
+              decoration: BoxDecoration(
+                color: Colors.black45,
+              ),
+            ),
+            // ListTile(
+            //   title: Text('Item 1'),
+            //   onTap: () {},
+            // ),
+            ListTile(
+              title: Text('Logout'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+
     );
   }
 }
+
+
+
+
 
 
 
