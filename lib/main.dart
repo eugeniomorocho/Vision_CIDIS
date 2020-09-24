@@ -1,7 +1,11 @@
+import 'package:camera/new/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:visioncidis/gallery.dart';
 import 'dart:convert' show json, base64, ascii;
+
+import 'camera.dart'; //Para poder usar camera.dart
 
 const SERVER_IP = 'http://192.168.1.247:3000';
 final storage = FlutterSecureStorage();
@@ -243,43 +247,61 @@ class PantallaOpciones extends StatelessWidget {
                 mainAxisSpacing: 4.0,
                 crossAxisSpacing: 4.0,
             children: <Widget>[
-              Card(
-                color: Colors.white70,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 35.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                          'DETECT',
-                          style: TextStyle(fontSize: 14.0),
-                      ),
-                      Icon(
-                          Icons.camera_alt,
-                          color: Colors.black,
-                          size: 75.0,
-                      ),
-                    ],
+              GestureDetector(
+                onTap: () {
+                  //Do something when pressed the button
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ScreenCamera()),
+                  );
+                },
+                child: Card(
+                  color: Colors.white70,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 35.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                            'DETECT',
+                            style: TextStyle(fontSize: 14.0),
+                        ),
+                        Icon(
+                            Icons.camera_alt,
+                            color: Colors.black,
+                            size: 75.0,
+                        ),
+                      ],
+                    ),
                   ),
-                )
+                ),
               ),
-              Card(
-                color: Colors.white70,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 35.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                          'GALLERY',
-                          style: TextStyle(fontSize: 14.0),
-                      ),
-                      Icon(
-                          Icons.photo_library,
-                          color: Colors.black,
-                          size: 75.0,
-                      ),
-                    ]
-                  ),
-                )
+              GestureDetector(
+                onTap: () {
+                  //Do something when pressed the button
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ScreenGallery()),
+                  );
+                },
+                child: Card(
+                  color: Colors.white70,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 35.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                            'GALLERY',
+                            style: TextStyle(fontSize: 14.0),
+                        ),
+                        Icon(
+                            Icons.photo_library,
+                            color: Colors.black,
+                            size: 75.0,
+                        ),
+                      ]
+                    ),
+                  )
+                ),
               ),
               Card(
                   color: Colors.white70,
@@ -345,8 +367,12 @@ class PantallaOpciones extends StatelessWidget {
 
             ListTile(
               leading: const Icon(Icons.exit_to_app),
-              title: Text('Logout'),
-             onTap: () {},
+              title: Text('Sign out'),
+             onTap: () {
+                //Logout
+
+                Navigator.pop(context); //Cierra el drawer
+             },
             ),
           ],
         ),
