@@ -1,29 +1,42 @@
-import 'package:camera/new/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:visioncidis/gallery.dart';
 import 'dart:convert' show json, base64, ascii;
 
-import 'camera.dart'; //Para poder usar camera.dart
+//Para poder usar camera.dart y gallery.dart
+import 'package:camera/new/camera.dart';
+import 'camera.dart';
+import 'login.dart';
+import 'pantallaprincipal.dart';
+import 'package:visioncidis/gallery.dart';
 
-const SERVER_IP = 'http://192.168.1.247:3000';
+// Backend Routes: /signup, /login, y /data.
+// /signup - returns 201 if the user is created, 409 if not.
+// /login - returns 200 and the JWT in the body, or 401 if no user found.
+// /data - Return data to autenticated users with 200, and 401 for invalid or expired user.
+
+//Se inicializa un objeto FlutterSecureStorage
+//Se configura IP y puerto del servidor NODE
+const SERVER_IP = 'http://192.168.2.122:3000';
 final storage = FlutterSecureStorage();
 
 void main() {
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   // Widget root.
+  // Revisa si hay algun JWT y la validez para mostrar el HomePage, caso contrario pide Login.
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
     if(jwt == null) return "";
     return jwt;
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Authentication Demo',
+      title: 'Authentication',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -40,7 +53,8 @@ class MyApp extends StatelessWidget {
               } else {
                 var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
                 if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
-                  return HomePage(str, payload);
+                  //return HomePage(str, payload); //El original que retornaba el "e-mail" y "Secret Data"
+                  return PantallaOpciones(); // Llama a PantallaOpciones si el token está vigente
                 } else {
                   return LoginPage();
                 }
@@ -54,10 +68,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//**************************************************************************************
+
+//Pantalla principal de Login
 class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  //Helper Method de pantalla principal de Login
   void displayDialog(context, title, text) => showDialog(
     context: context,
     builder: (context) =>
@@ -67,6 +84,8 @@ class LoginPage extends StatelessWidget {
         ),
   );
 
+  //Method para Login y Signup con POST Request.
+  //Retorna el JWT si la autenticación es correcta.
   Future<String> attemptLogIn(String username, String password) async {
     var res = await http.post(
         "$SERVER_IP/login",
@@ -75,10 +94,12 @@ class LoginPage extends StatelessWidget {
           "password": password
         }
     );
+    //Retorna "null" en caso de error (i.e. wrong username/password).
     if(res.statusCode == 200) return res.body;
     return null;
   }
 
+  //Method para SignUp, solo retorna el status (201 ok ó 409 error)
   Future<int> attemptSignUp(String username, String password) async {
     var res = await http.post(
         '$SERVER_IP/signup',
@@ -88,7 +109,6 @@ class LoginPage extends StatelessWidget {
         }
     );
     return res.statusCode;
-
   }
 
   @override
@@ -122,10 +142,13 @@ class LoginPage extends StatelessWidget {
                     labelText: 'Password'
                 ),
               ),
+
+              //Botón attempt LOG IN
               FlatButton(
                   onPressed: () async {
                     var username = _usernameController.text;
                     var password = _passwordController.text;
+
                     var jwt = await attemptLogIn(username, password);
                     if(jwt != null) {
                       storage.write(key: "jwt", value: jwt);
@@ -141,21 +164,24 @@ class LoginPage extends StatelessWidget {
                   },
                   child: Text("Log In")
               ),
+
+              //Botón attempt SIGN UP
               FlatButton(
                   onPressed: () async {
                     var username = _usernameController.text;
                     var password = _passwordController.text;
-
+                    //Revisa en frontend que el username y password tengan mas de 4 caracteres
                     if(username.length < 4)
                       displayDialog(context, "Invalid Username", "The username should be at least 4 characters long");
                     else if(password.length < 4)
                       displayDialog(context, "Invalid Password", "The password should be at least 4 characters long");
+                    //Crea el usuario en backend o genera error
                     else{
                       var res = await attemptSignUp(username, password);
                       if(res == 201)
                         displayDialog(context, "Success", "The user was created. Log in now.");
                       else if(res == 409)
-                        displayDialog(context, "That username is already registered", "Please try to sign up using another username or log in if you already have an account.");
+                        displayDialog(context, "That username is already registered", "Please try to sign up using another username, or log in if you already have an account.");
                       else {
                         displayDialog(context, "Error", "An unknown error occurred.");
                       }
@@ -184,6 +210,9 @@ class LoginPage extends StatelessWidget {
   }
 }
 
+//**************************************************************************************
+
+// HomePage
 class HomePage extends StatelessWidget {
   HomePage(this.jwt, this.payload);
 
@@ -200,6 +229,7 @@ class HomePage extends StatelessWidget {
   final String jwt;
   final Map<String, dynamic> payload;
 
+// The HomePage´s build() method
   @override
   Widget build(BuildContext context) =>
       Scaffold(
@@ -212,176 +242,23 @@ class HomePage extends StatelessWidget {
               Column(children: <Widget>[
                 Text("${payload['username']}, here's the data:"),
                 Text(snapshot.data, style: Theme.of(context).textTheme.display1)
-              ],)
-                  :
+              ],
+              )
+              :
               snapshot.hasError ? Text("An error occurred") : CircularProgressIndicator()
           ),
         ),
       );
+
 }
 
-
-class PantallaOpciones extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomPadding: false, //Avoid widgets resize when keyboard appears
-      appBar: AppBar(
-        title: Text("Vision CIDIS"),
-        backgroundColor: Colors.black,
-        centerTitle: true,
-      ),
-      body: Container(
-        alignment: Alignment.center, //Centra las cards verticalmente
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/TEMPLATE.jpg"),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: GridView.count(
-            shrinkWrap: true, //Centra las cards verticalmente
-                crossAxisCount: 2,
-                childAspectRatio: 1.0,
-                padding: const EdgeInsets.all(4.0),
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  //Do something when pressed the button
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ScreenCamera()),
-                  );
-                },
-                child: Card(
-                  color: Colors.white70,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 35.0),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                            'DETECT',
-                            style: TextStyle(fontSize: 14.0),
-                        ),
-                        Icon(
-                            Icons.camera_alt,
-                            color: Colors.black,
-                            size: 75.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  //Do something when pressed the button
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ScreenGallery()),
-                  );
-                },
-                child: Card(
-                  color: Colors.white70,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 35.0),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                            'GALLERY',
-                            style: TextStyle(fontSize: 14.0),
-                        ),
-                        Icon(
-                            Icons.photo_library,
-                            color: Colors.black,
-                            size: 75.0,
-                        ),
-                      ]
-                    ),
-                  )
-                ),
-              ),
-              Card(
-                  color: Colors.white70,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 35.0),
-                    child: Column(
-                        children: <Widget>[
-                          Text(
-                              'RESULTS',
-                              style: TextStyle(fontSize: 14.0),
-                          ),
-                          Icon(
-                              Icons.assignment,
-                              color: Colors.black,
-                              size: 75.0,
-                          ),
-                        ]
-                    ),
-                  )
-              ),
-              Card(
-                  color: Colors.white70,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 35.0),
-                    child: Column(
-                        children: <Widget>[
-                          Text(
-                              'SETTINGS',
-                               style: TextStyle(fontSize: 14.0),
-                          ),
-                          Icon(
-                              Icons.settings,
-                              color: Colors.black,
-                              size: 75.0,
-                          ),
-                        ]
-                    ),
-                  )
-              ),
-            ]
-        ),
-      ),
-
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              currentAccountPicture: CircleAvatar(
-                radius: 20.0,
-                backgroundImage: AssetImage("assets/unnamed.jpg"),
-              ),
-              accountName: Text("Eugenio Morocho Cayamcela"),
-              accountEmail: Text("maneumor@espol.edu.ec"),
-              decoration: BoxDecoration(
-                color: Colors.black45,
-              ),
-            ),
-            // ListTile(
-            //   title: Text('Item 1'),
-            //   onTap: () {},
-            // ),
-
-            ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: Text('Sign out'),
-             onTap: () {
-                //Logout
-
-                Navigator.pop(context); //Cierra el drawer
-             },
-            ),
-          ],
-        ),
-      ),
+//**************************************************************************************
 
 
-    );
-  }
-}
+//*****************************************************************************************
+
+
+
 
 
 
