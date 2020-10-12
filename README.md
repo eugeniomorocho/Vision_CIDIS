@@ -11,7 +11,7 @@ The following commands enable the connection and data transfer to/from the `Node
 
 ### Sending a Request
 The following command sends a request from the app to the server:
-```
+```dart
 var res = await http.post(
         '$SERVER_IP/signup',
         body: {
