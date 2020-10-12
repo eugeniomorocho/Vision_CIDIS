@@ -4,6 +4,7 @@ import 'package:visioncidis/main.dart';
 import 'package:visioncidis/uploadphoto.dart';
 import 'camera.dart';
 import 'gallery.dart';
+import 'login.dart';
 
 
 class PantallaOpciones extends StatelessWidget {

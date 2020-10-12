@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
 
-import 'main.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert' show json, base64, ascii;
+
+
 import 'pantallaprincipal.dart';
 
 
@@ -92,7 +95,8 @@ class LoginPage extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage.fromBase64(jwt)
+                                    //builder: (context) => HomePage.fromBase64(jwt)
+                                    builder: (context) => PantallaOpciones()
                                 )
                             );
                           } else {
