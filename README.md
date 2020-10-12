@@ -32,4 +32,4 @@ The following command sends an image to the server:
 ## About
 Centro de Investigación, Desarrollo, e Innovación (CIDIS).\
 Escuela Superior Politécnica del Litoral, Guayaquil, Ecuador.\
-2020 all rights reserved.\
+2020 all rights reserved.
