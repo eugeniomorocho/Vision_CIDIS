@@ -7,7 +7,7 @@ A Flutter application developed and mantained by the Computer Vision Group from 
 This project contains all the necessary files to compile and run the Front End mobile app.
 
 ## Connecting to the Back End
-The following commands enable the connection and data transfer to/from the Node.js server:
+The following commands enable the connection and data transfer to/from the `Node.js` server:
 
 ### Sending a Request
 The following command sends a request from the app to the server:
