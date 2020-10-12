@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:visioncidis/main.dart';
+import 'package:visioncidis/uploadphoto.dart';
 import 'camera.dart';
 import 'gallery.dart';
 
@@ -87,24 +88,33 @@ class PantallaOpciones extends StatelessWidget {
                     )
                 ),
               ),
-              Card(
-                  color: Colors.white70,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 35.0),
-                    child: Column(
-                        children: <Widget>[
-                          Text(
-                            'RESULTS',
-                            style: TextStyle(fontSize: 14.0),
-                          ),
-                          Icon(
-                            Icons.assignment,
-                            color: Colors.black,
-                            size: 75.0,
-                          ),
-                        ]
-                    ),
-                  )
+              GestureDetector(
+                onTap: () {
+                  //Do something when pressed the button
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UploadImage()),
+                  );
+                },
+                child: Card(
+                    color: Colors.white70,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 35.0),
+                      child: Column(
+                          children: <Widget>[
+                            Text(
+                              'RESULTS',
+                              style: TextStyle(fontSize: 14.0),
+                            ),
+                            Icon(
+                              Icons.assignment,
+                              color: Colors.black,
+                              size: 75.0,
+                            ),
+                          ]
+                      ),
+                    )
+                ),
               ),
               Card(
                   color: Colors.white70,
