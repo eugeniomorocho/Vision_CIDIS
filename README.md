@@ -1,6 +1,6 @@
 # Vision CIDIS App
 
-A Flutter application developed and mantained by the Computer Vision Group from CIDIS-Espol.
+A `Flutter` application developed and mantained by the Computer Vision Group from CIDIS-Espol.
 
 ## Getting Started
 
