@@ -7,8 +7,11 @@ import 'package:http/http.dart' as http;
 
 class SignupPage extends StatelessWidget {
 
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
 
   void displayDialog(context, title, text) => showDialog(
     context: context,
@@ -20,10 +23,12 @@ class SignupPage extends StatelessWidget {
   );
 
   // Method para SignUp con POST Request.
-  Future<int> attemptSignUp(String username, String password) async {
+  Future<int> attemptSignUp(String name, String lastname, String username, String password) async {
     var res = await http.post(
         '$SERVER_IP/signup',
         body: {
+          "name": name,
+          "lastname": lastname,
           "username": username,
           "password": password
         }
@@ -47,13 +52,25 @@ class SignupPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Padding(
-                padding: EdgeInsets.only(top: 280.0), //To move the textbox and buttons down
+                padding: EdgeInsets.only(top: 240.0), //To move the textbox and buttons down
                 child: Column(
                   children: <Widget>[
                     TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                          labelText: 'First Name'
+                      ),
+                    ),
+                    TextField(
+                      controller: _lastnameController,
+                      decoration: InputDecoration(
+                          labelText: 'Last Name'
+                      ),
+                    ),
+                    TextField(
                       controller: _usernameController,
                       decoration: InputDecoration(
-                          labelText: 'Username'
+                          labelText: 'E-mail'
                       ),
                     ),
                     TextField(
@@ -77,8 +94,11 @@ class SignupPage extends StatelessWidget {
                               MaterialPageRoute(builder: (context) => LoginPage()),
                             );
 
+                            var name = _nameController.text;
+                            var lastname = _lastnameController.text;
                             var username = _usernameController.text;
                             var password = _passwordController.text;
+
                             //Revisa en frontend que el username y password tengan mas de 4 caracteres
                             if(username.length < 4)
                               displayDialog(context, "Invalid Username", "The username should be at least 4 characters long");
@@ -86,7 +106,7 @@ class SignupPage extends StatelessWidget {
                               displayDialog(context, "Invalid Password", "The password should be at least 4 characters long");
                             //Crea el usuario en backend o genera error
                             else{
-                              var res = await attemptSignUp(username, password);
+                              var res = await attemptSignUp(name, lastname, username, password);
                               if(res == 201)
                                 displayDialog(context, "Success", "The user was created. Log in now.");
                               else if(res == 409)
@@ -100,20 +120,6 @@ class SignupPage extends StatelessWidget {
                       ),
                     ),
 
-
-
-                    //*********************************************************************
-                    // FlatButton(
-                    //     onPressed: () {
-                    //       //Do something when pressed the button
-                    //       Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(builder: (context) => PantallaOpciones()),
-                    //       );
-                    //     },
-                    //     child: Text("Next")
-                    // ),
-                    //*********************************************************************
 
                   ],
                 ),
