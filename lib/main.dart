@@ -5,23 +5,20 @@ import 'dart:convert' show json, base64, ascii;
 import 'login.dart';
 import 'pantallaprincipal.dart';
 
-// //Se configura IP y puerto del servidor NODE
 const SERVER_IP = 'http://192.168.2.122:3000';
 final storage = FlutterSecureStorage();
-
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // Revisa si hay algun JWT y la validez para mostrar el HomePage, caso contrario pide Login.
+  // Revisa si hay algun JWT válido para mostrar el HomePage, caso contrario pide Login.
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
     if(jwt == null) return "";
     return jwt;
   }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

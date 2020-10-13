@@ -3,18 +3,14 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:convert' show json, base64, ascii;
-
-
 import 'pantallaprincipal.dart';
 
 
-//Pantalla principal de Log In
 class LoginPage extends StatelessWidget {
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  //Helper Method de pantalla principal de Login
+
   void displayDialog(context, title, text) => showDialog(
     context: context,
     builder: (context) =>
@@ -24,8 +20,7 @@ class LoginPage extends StatelessWidget {
         ),
   );
 
-  //Method para Login y Signup con POST Request.
-  //Retorna el JWT si la autenticación es correcta.
+  // Method para Login con POST Request.
   Future<String> attemptLogIn(String username, String password) async {
     var res = await http.post(
         "$SERVER_IP/login",
@@ -34,12 +29,14 @@ class LoginPage extends StatelessWidget {
           "password": password
         }
     );
-    //Retorna "null" en caso de error (i.e. wrong username/password).
+    // Compara el status (200 ok, ó 401 error).
+    // Retorna el JWT si la autenticación es correcta.
+    // Retorna "null" en caso de error (i.e. wrong username/password).
     if(res.statusCode == 200) return res.body;
     return null;
   }
 
-  //Method para SignUp, solo retorna el status (201 ok ó 409 error)
+  // Method para SignUp con POST Request.
   Future<int> attemptSignUp(String username, String password) async {
     var res = await http.post(
         '$SERVER_IP/signup',
@@ -48,6 +45,7 @@ class LoginPage extends StatelessWidget {
           "password": password
         }
     );
+    // Solo retorna el status (201 ok, ó 409 error).
     return res.statusCode;
   }
 
@@ -66,7 +64,7 @@ class LoginPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Padding(
-                padding: EdgeInsets.only(top: 250.0), //To move the textbox and buttons down
+                padding: EdgeInsets.only(top: 280.0), //To move the textbox and buttons down
                 child: Column(
                   children: <Widget>[
                     TextField(
@@ -84,26 +82,31 @@ class LoginPage extends StatelessWidget {
                     ),
 
                     //Botón attempt LOG IN
-                    FlatButton(
-                        onPressed: () async {
-                          var username = _usernameController.text;
-                          var password = _passwordController.text;
+                    Container(
+                      margin: const EdgeInsets.only(top: 30.0),
+                      child: RaisedButton(
+                          color: Colors. black,
+                          textColor: Colors.white,
+                          onPressed: () async {
+                            var username = _usernameController.text;
+                            var password = _passwordController.text;
 
-                          var jwt = await attemptLogIn(username, password);
-                          if(jwt != null) {
-                            storage.write(key: "jwt", value: jwt);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    //builder: (context) => HomePage.fromBase64(jwt)
-                                    builder: (context) => PantallaOpciones()
-                                )
-                            );
-                          } else {
-                            displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
-                          }
-                        },
-                        child: Text("Log In")
+                            var jwt = await attemptLogIn(username, password);
+                            if(jwt != null) {
+                              storage.write(key: "jwt", value: jwt);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      //builder: (context) => HomePage.fromBase64(jwt)
+                                      builder: (context) => PantallaOpciones()
+                                  )
+                              );
+                            } else {
+                              displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
+                            }
+                          },
+                          child: Text("Log In")
+                      ),
                     ),
 
                     //Botón attempt SIGN UP
@@ -131,16 +134,18 @@ class LoginPage extends StatelessWidget {
                       child: Text("Sign Up"),
                     ),
 
-                    FlatButton(
-                        onPressed: () {
-                          //Do something when pressed the button
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => PantallaOpciones()),
-                          );
-                        },
-                        child: Text("Next")
-                    ),
+                    //*********************************************************************
+                    // FlatButton(
+                    //     onPressed: () {
+                    //       //Do something when pressed the button
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(builder: (context) => PantallaOpciones()),
+                    //       );
+                    //     },
+                    //     child: Text("Next")
+                    // ),
+                    //*********************************************************************
 
                   ],
                 ),
