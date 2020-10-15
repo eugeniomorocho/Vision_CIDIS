@@ -48,7 +48,7 @@ class PantallaOpciones extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'DETECT',
+                          'CAMERA',
                           style: TextStyle(fontSize: 14.0),
                         ),
                         Icon(
@@ -94,7 +94,7 @@ class PantallaOpciones extends StatelessWidget {
                   //Do something when pressed the button
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UploadImage()),
+                    MaterialPageRoute(builder: (context) => UploadPage()), //UploadImage
                   );
                 },
                 child: Card(

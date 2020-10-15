@@ -7,9 +7,9 @@ import 'package:http/http.dart' as http;
 
 class SignupPage extends StatelessWidget {
 
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _lastnameController = TextEditingController();
+  final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
 
@@ -23,13 +23,13 @@ class SignupPage extends StatelessWidget {
   );
 
   // Method para SignUp con POST Request.
-  Future<int> attemptSignUp(String name, String lastname, String username, String password) async {
+  Future<int> attemptSignUp(String fullname, String username, String email, String password) async {
     var res = await http.post(
         '$SERVER_IP/signup',
         body: {
-          "name": name,
-          "lastname": lastname,
+          "fullname": fullname,
           "username": username,
+          "user_mail": email,
           "password": password
         }
     );
@@ -56,19 +56,19 @@ class SignupPage extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     TextField(
-                      controller: _nameController,
+                      controller: _fullnameController,
                       decoration: InputDecoration(
-                          labelText: 'First Name'
-                      ),
-                    ),
-                    TextField(
-                      controller: _lastnameController,
-                      decoration: InputDecoration(
-                          labelText: 'Last Name'
+                          labelText: 'Full Name'
                       ),
                     ),
                     TextField(
                       controller: _usernameController,
+                      decoration: InputDecoration(
+                          labelText: 'Username'
+                      ),
+                    ),
+                    TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                           labelText: 'E-mail'
                       ),
@@ -94,19 +94,19 @@ class SignupPage extends StatelessWidget {
                               MaterialPageRoute(builder: (context) => LoginPage()),
                             );
 
-                            var name = _nameController.text;
-                            var lastname = _lastnameController.text;
+                            var fullname = _fullnameController.text;
                             var username = _usernameController.text;
+                            var email = _emailController.text;
                             var password = _passwordController.text;
 
                             //Revisa en frontend que el username y password tengan mas de 4 caracteres
-                            if(username.length < 4)
+                            if(email.length < 4)
                               displayDialog(context, "Invalid Username", "The username should be at least 4 characters long");
                             else if(password.length < 4)
                               displayDialog(context, "Invalid Password", "The password should be at least 4 characters long");
                             //Crea el usuario en backend o genera error
                             else{
-                              var res = await attemptSignUp(name, lastname, username, password);
+                              var res = await attemptSignUp(fullname, username, email, password);
                               if(res == 201)
                                 displayDialog(context, "Success", "The user was created. Log in now.");
                               else if(res == 409)

@@ -5,7 +5,9 @@ import 'dart:convert' show json, base64, ascii;
 import 'login.dart';
 import 'pantallaprincipal.dart';
 
-const SERVER_IP = 'http://192.168.2.122:3000';
+//const SERVER_IP = 'http://192.168.1.5:3000';
+const SERVER_IP = 'http://200.126.19.99:5000'; //CIDIS Server
+
 final storage = FlutterSecureStorage();
 
 void main() {
