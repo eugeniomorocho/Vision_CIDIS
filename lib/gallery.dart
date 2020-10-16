@@ -1,97 +1,53 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'main.dart';
 
-//void main() => runApp(MyApp());
-
-class ScreenGallery extends StatelessWidget {
-  // This widget is the root of your application.
+class UploadGallery extends StatefulWidget {
+  //UploadPage({Key key, this.url}) : super(key: key);
+  final String url = '$SERVER_IP/upload';
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Example Image Picker',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Example Image Picker'),
-    );
-  }
+  _UploadGalleryState createState() => _UploadGalleryState();
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
+class _UploadGalleryState extends State<UploadGallery> {
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  File _image;
-
-  Future getImage(ImgSource source) async {
-    var image = await ImagePickerGC.pickImage(
-      context: context,
-      source: source,
-      cameraIcon: Icon(
-        Icons.add,
-        color: Colors.red,
-      ),//cameraIcon and galleryIcon can change. If no icon provided default icon will be present
-    );
-    setState(() {
-      _image = image;
-    });
+  Future<String> uploadImage(filename, url) async {
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.files.add(await http.MultipartFile.fromPath('picture', filename));
+    var res = await request.send();
+    return res.reasonPhrase;
   }
 
+  String state = "";
+
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Upload Image from Gallery'),
+        backgroundColor: Colors.black,
+        centerTitle: true,
       ),
       body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 300,
-                child: RaisedButton(
-                  onPressed: () => getImage(ImgSource.Gallery),
-                  color: Colors.blue,
-                  child: Text(
-                    "From Gallery".toUpperCase(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              Container(
-                width: 300,
-                child: RaisedButton(
-                  onPressed: () => getImage(ImgSource.Camera),
-                  color: Colors.deepPurple,
-                  child: Text(
-                    "From Camera".toUpperCase(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              Container(
-                width: 300,
-                child: RaisedButton(
-                  onPressed: () => getImage(ImgSource.Both),
-                  color: Colors.red,
-                  child: Text(
-                    "Both".toUpperCase(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              _image != null ? Image.file(_image) : Container(),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(state)
+          ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          var file = await ImagePicker.pickImage(source: ImageSource.gallery);
+          var res = await uploadImage(file.path, widget.url);
+          setState(() {
+            state = res;
+            print(res);
+          });
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

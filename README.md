@@ -10,28 +10,65 @@ This project contains all the necessary files to compile and run the Front End m
 The following commands enable the connection and data transfer to/from the `Node.js` server:
 
 ### Sending a Request
-The following command sends a `POST` request from the app to the server:\
+The following command sends a `POST` request from the app to the server:
 
-Signup
+`Signup`
 ```dart
-var res = await http.post(
-    '$SERVER_IP/signup',
-    body: {
-      "username": username,
-      "password": password
-    }
-  );
+  Future<int> attemptSignUp(String fullname, String username, String email, String password) async {
+    var res = await http.post(
+        '$SERVER_IP/signup',
+        body: {
+          "fullname": fullname,
+          "username": username,
+          "user_mail": email,
+          "password": password
+        }
+    );
 ```
-Login
+
+`Login`
+```dart
+  Future<String> attemptLogIn(String username, String password) async {
+    var res = await http.post(
+        "$SERVER_IP/login",
+        body: {
+          "username": username,
+          "password": password
+        }
+    );
+```
+
+`Logout`
+```dart
+onTap: () async {
+    Navigator.pop(context);
+    await storage.deleteAll();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+}, 
+```
+
+`Forgot_password`
 ```dart
 var res = await http.post(
     "$SERVER_IP/login",
     body: {
-      "username": username,
-      "password": password
+      "username": username
     }
-  );
 ```
+
+`Show_results`
+```dart
+var res = await http.post(
+    "$SERVER_IP/login",
+    body: {
+      "username": username
+    }
+```
+
+
 
 ### Getting Information
 The following command retrieves information from the server:
@@ -54,8 +91,9 @@ The app connects to the Backend through the following routes:\
 
 ## Requirements
 ### Front End
-Flutter
 Android Studio
+Flutter Plugin
+Dart Plugin
 ### Back End
 Node.JS
 #### Back End Libraries
@@ -73,7 +111,11 @@ $ npm install --save express jsonwebtoken sqlite3 multer
 
 
 ## Implementing the Back End with Node
+Navigate to your <server>.js directory through the command window `cmd` and type:
 
+```aidl
+$ node <server>.js
+```
 
 
 ## About

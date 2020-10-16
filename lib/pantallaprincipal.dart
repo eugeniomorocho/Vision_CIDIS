@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:visioncidis/main.dart';
-import 'package:visioncidis/uploadphoto.dart';
 import 'camera.dart';
 import 'gallery.dart';
 import 'login.dart';
+import 'results.dart';
 
 
 class PantallaOpciones extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +39,7 @@ class PantallaOpciones extends StatelessWidget {
                   //Do something when pressed the button
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ScreenCamera()),
+                    MaterialPageRoute(builder: (context) => UploadCamera()),
                   );
                 },
                 child: Card(
@@ -66,7 +67,7 @@ class PantallaOpciones extends StatelessWidget {
                   //Do something when pressed the button
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ScreenGallery()),
+                    MaterialPageRoute(builder: (context) => UploadGallery()),
                   );
                 },
                 child: Card(
@@ -94,7 +95,7 @@ class PantallaOpciones extends StatelessWidget {
                   //Do something when pressed the button
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UploadPage()), //UploadImage
+                    MaterialPageRoute(builder: (context) => ResultsPage()),
                   );
                 },
                 child: Card(
@@ -168,6 +169,12 @@ class PantallaOpciones extends StatelessWidget {
                 Navigator.pop(context); //Cierra el drawer
 
                 await storage.deleteAll();
+
+                // if (jwt != null) {
+                // var jwt = await storage.read(key: "jwt");
+                // if(jwt == null) return "";
+                // storage.deleteAll();
+                // };
 
                 Navigator.push(
                   context,
