@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:visioncidis/forgotpassword.dart';
 import 'package:visioncidis/signup.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
@@ -53,7 +54,7 @@ class LoginPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Padding(
-                padding: EdgeInsets.only(top: 280.0), //To move the textbox and buttons down
+                padding: EdgeInsets.only(top: 260.0), //To move the textbox and buttons down
                 child: Column(
                   children: <Widget>[
                     TextField(
@@ -121,6 +122,29 @@ class LoginPage extends StatelessWidget {
 
 
                           child: Text("Sign Up",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RawMaterialButton(
+                          constraints: BoxConstraints(),
+                          padding: const EdgeInsets.only(top: 0.0),
+                          onPressed: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ForgotPassword()),
+                            );
+                          }, //async
+
+
+                          child: Text("Forgot your password? ",
                             style: TextStyle(
                               decoration: TextDecoration.underline,
                             ),

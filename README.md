@@ -52,11 +52,16 @@ onTap: () async {
 
 `Forgot_password`
 ```dart
-var res = await http.post(
-    "$SERVER_IP/login",
-    body: {
-      "username": username
-    }
+  Future<int> attemptSignUp(String username) async {
+    var res = await http.post(
+        '$SERVER_IP/forgot_password',
+        body: {
+          "username": username,
+        }
+    );
+    // Solo retorna el status (201 ok, ó 409 error).
+    return res.statusCode;
+  }
 ```
 
 `Show_results`

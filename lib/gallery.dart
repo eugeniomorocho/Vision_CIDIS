@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'main.dart';
+import "login.dart";
 
 class UploadGallery extends StatefulWidget {
   //UploadPage({Key key, this.url}) : super(key: key);
@@ -14,6 +15,9 @@ class _UploadGalleryState extends State<UploadGallery> {
 
   Future<String> uploadImage(filename, url) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
+    //****************************** Para enviar el username con la foto
+    //request.fields['username'] = username;
+    //******************************
     request.files.add(await http.MultipartFile.fromPath('picture', filename));
     var res = await request.send();
     return res.reasonPhrase;
