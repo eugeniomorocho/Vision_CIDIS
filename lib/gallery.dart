@@ -38,6 +38,30 @@ class _UploadGalleryState extends State<UploadGallery> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
+
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
+              child: Text(
+                "Vision CIDIS Gallery Upload",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Text(
+              "To select an image from your gallery, please tap the button below.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black54,
+              ),
+            ),
+
+
+
             Text(state)
           ],
         ),
@@ -51,7 +75,7 @@ class _UploadGalleryState extends State<UploadGallery> {
             print(res);
           });
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.photo_library),
       ),
     );
   }

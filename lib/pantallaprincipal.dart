@@ -11,7 +11,11 @@ class PantallaOpciones extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    return new WillPopScope( // Deactivate "back" button
+        onWillPop: () async => false,
+
+    child: new Scaffold(
       resizeToAvoidBottomPadding: false, //Avoid widgets resize when keyboard appears
       appBar: AppBar(
         title: Text("Vision CIDIS"),
@@ -189,6 +193,7 @@ class PantallaOpciones extends StatelessWidget {
       ),
 
 
+      )
     );
   }
 }

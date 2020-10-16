@@ -26,7 +26,7 @@ class ForgotPassword extends StatelessWidget {
           "username": username,
         }
     );
-    // Solo retorna el status (200 ok, ó 201 error).
+    // Solo retorna el status (201 ok, ó 409 error).
     return res.statusCode;
   }
 
