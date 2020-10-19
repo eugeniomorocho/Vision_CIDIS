@@ -5,6 +5,17 @@ import 'main.dart';
 import "package:visioncidis/login.dart";
 import "login.dart";
 
+
+void displayDialog(context, title, text) => showDialog(
+  context: context,
+  builder: (context) =>
+      AlertDialog(
+          title: Text(title),
+          content: Text(text)
+      ),
+);
+
+
 class UploadGallery extends StatefulWidget {
   //UploadPage({Key key, this.url}) : super(key: key);
   final String url = '$SERVER_IP/upload';
@@ -14,11 +25,11 @@ class UploadGallery extends StatefulWidget {
 
 class _UploadGalleryState extends State<UploadGallery> {
 
-
+  //Status_code 200 ok / 201 Error
   Future<String> uploadImage(filename, url, username) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     //****************************** Para enviar el username con la foto
-    request.fields['username'] = username;
+    //request.fields['username'] = username;
     //******************************
     request.files.add(await http.MultipartFile.fromPath('picture', filename));
     var res = await request.send();
@@ -68,10 +79,20 @@ class _UploadGalleryState extends State<UploadGallery> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.gallery);
-          var res = await uploadImage(file.path, widget.url, username);
+          var response = await uploadImage(file.path, widget.url, username);
+
+          if(response == 200){
+            displayDialog(context, "Success", "The image has been uploaded");
+          }
+          else if(response == 201)
+            displayDialog(context, "An Error Occurred", "Try uploading the image again");
+          else {
+            displayDialog(context, "Error", "An unknown error occurred.");
+          }
+
           setState(() {
-            state = res;
-            print(res);
+            state = response;
+            print(response);
           });
         },
         child: Icon(Icons.photo_library),
