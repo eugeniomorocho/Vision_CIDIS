@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:visioncidis/pantallaprincipal.dart';
 import 'main.dart';
 import "package:visioncidis/login.dart";
 import "login.dart";
@@ -11,7 +12,27 @@ void displayDialog(context, title, text) => showDialog(
   builder: (context) =>
       AlertDialog(
           title: Text(title),
-          content: Text(text)
+          content: Text(text),
+          actions: <Widget>[
+             new FlatButton(
+                child: new Text("Upload Another"),
+                onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UploadGallery()),
+                    );
+                },
+              ),
+              new FlatButton(
+                child: Text("Back to Main Menu"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PantallaOpciones()),
+                  );
+                },
+              ),
+          ],
       ),
 );
 
@@ -26,14 +47,15 @@ class UploadGallery extends StatefulWidget {
 class _UploadGalleryState extends State<UploadGallery> {
 
   //Status_code 200 ok / 201 Error
-  Future<String> uploadImage(filename, url, username) async {
+  Future<int> uploadImage(filename, url, username) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     //****************************** Para enviar el username con la foto
     //request.fields['username'] = username;
     //******************************
     request.files.add(await http.MultipartFile.fromPath('picture', filename));
     var res = await request.send();
-    return res.reasonPhrase;
+    //return res.reasonPhrase;
+    return res.statusCode;
   }
 
   String state = "";
@@ -79,20 +101,20 @@ class _UploadGalleryState extends State<UploadGallery> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.gallery);
-          var response = await uploadImage(file.path, widget.url, username);
+          var res = await uploadImage(file.path, widget.url, username);
 
-          if(response == 200){
+          if(res == 200){
             displayDialog(context, "Success", "The image has been uploaded");
           }
-          else if(response == 201)
+          else if(res == 201)
             displayDialog(context, "An Error Occurred", "Try uploading the image again");
           else {
             displayDialog(context, "Error", "An unknown error occurred.");
           }
 
           setState(() {
-            state = response;
-            print(response);
+            state = res as String;
+            print(res);
           });
         },
         child: Icon(Icons.photo_library),
