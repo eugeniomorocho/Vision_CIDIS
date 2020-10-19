@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'main.dart';
+import "package:visioncidis/login.dart";
 import "login.dart";
 
 class UploadGallery extends StatefulWidget {
@@ -13,10 +14,11 @@ class UploadGallery extends StatefulWidget {
 
 class _UploadGalleryState extends State<UploadGallery> {
 
-  Future<String> uploadImage(filename, url) async {
+
+  Future<String> uploadImage(filename, url, username) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     //****************************** Para enviar el username con la foto
-    //request.fields['username'] = username;
+    request.fields['username'] = username;
     //******************************
     request.files.add(await http.MultipartFile.fromPath('picture', filename));
     var res = await request.send();
@@ -39,7 +41,6 @@ class _UploadGalleryState extends State<UploadGallery> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-
             Container(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
               child: Text(
@@ -60,8 +61,6 @@ class _UploadGalleryState extends State<UploadGallery> {
               ),
             ),
 
-
-
             Text(state)
           ],
         ),
@@ -69,7 +68,7 @@ class _UploadGalleryState extends State<UploadGallery> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.gallery);
-          var res = await uploadImage(file.path, widget.url);
+          var res = await uploadImage(file.path, widget.url, username);
           setState(() {
             state = res;
             print(res);

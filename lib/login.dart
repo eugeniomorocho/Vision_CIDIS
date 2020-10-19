@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 import 'pantallaprincipal.dart';
 
+var username;
 
 class LoginPage extends StatelessWidget {
 
@@ -38,7 +39,7 @@ class LoginPage extends StatelessWidget {
     return null;
   }
 
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +95,7 @@ class LoginPage extends StatelessWidget {
                             } else {
                               displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
                             }
+
                           },
                           child: Text("Log In")
                       ),
@@ -174,3 +176,4 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
