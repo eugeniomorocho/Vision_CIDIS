@@ -98,7 +98,7 @@ class _UploadCameraState extends State<UploadCamera> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.camera);
-          Image.file(file);
+          //Image.file(file);
           var res = await uploadImageCamera(file.path, widget.url, widget.username);
 
           if(res == 200){
