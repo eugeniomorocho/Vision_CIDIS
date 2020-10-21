@@ -42,8 +42,10 @@ class MyApp extends StatelessWidget {
               else {
                 var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
                 if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
+                  var username={payload['username']}; //*****
+                  var usuario = "${payload['username']}"; //*****
                   //return HomePage(str, payload); //El original que retornaba el "e-mail" y "Secret Data"
-                  return PantallaOpciones(); // Llama a PantallaOpciones si el token está vigente
+                  return PantallaOpciones(payload['username']); // Llama a PantallaOpciones si el token está vigente
                 }
                 else {
                   return LoginPage();

@@ -1,54 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'main.dart';
 import 'package:visioncidis/pantallaprincipal.dart';
-import "package:visioncidis/login.dart";
-
-
-void displayDialog(context, title, text) => showDialog(
-  context: context,
-  builder: (context) =>
-      AlertDialog(
-          title: Text(title),
-          content: Text(text),
-          actions: <Widget>[
-             new FlatButton(
-                child: new Text("Upload Another"),
-                onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UploadGallery()),
-                    );
-                },
-              ),
-              new FlatButton(
-                child: Text("Back to Main Menu"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PantallaOpciones()),
-                  );
-                },
-              ),
-          ],
-      ),
-);
+import 'main.dart';
 
 class UploadGallery extends StatefulWidget {
-  //UploadPage({Key key, this.url}) : super(key: key);
+  UploadGallery({Key key, this.username}) : super(key: key);
   final String url = '$SERVER_IP/upload';
+  final String username;
+
   @override
   _UploadGalleryState createState() => _UploadGalleryState();
 }
 
 class _UploadGalleryState extends State<UploadGallery> {
 
+  void displayDialog(context, title, text) => showDialog(
+
+    context: context,
+    builder: (context) =>
+        AlertDialog(
+          title: Text(title),
+          content: Text(text),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Upload Another"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UploadGallery(username: widget.username,)),
+                );
+              },
+            ),
+            new FlatButton(
+              child: Text("Back to Main Menu"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PantallaOpciones(widget.username)),
+                );
+              },
+            ),
+          ],
+        ),
+  );
+
   //Status_code 200 ok / 201 Error
   Future<int> uploadImage(filename, url, username) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     //****************************** Para enviar el username con la foto
-    //request.fields['username'] = username;
+    request.fields['username'] = username;
     //******************************
     request.files.add(await http.MultipartFile.fromPath('picture', filename));
     var res = await request.send();
@@ -99,7 +100,7 @@ class _UploadGalleryState extends State<UploadGallery> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.gallery);
-          var res = await uploadImage(file.path, widget.url, username);
+          var res = await uploadImage(file.path, widget.url,  widget.username);
 
           if(res == 200){
             displayDialog(context, "Success", "The image has been uploaded");
@@ -120,3 +121,4 @@ class _UploadGalleryState extends State<UploadGallery> {
     );
   }
 }
+

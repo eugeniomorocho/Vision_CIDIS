@@ -89,7 +89,7 @@ class LoginPage extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       //builder: (context) => HomePage.fromBase64(jwt)
-                                      builder: (context) => PantallaOpciones()
+                                      builder: (context) => PantallaOpciones(username)
                                   )
                               );
                             } else {
