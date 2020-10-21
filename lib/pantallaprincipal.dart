@@ -163,10 +163,10 @@ class PantallaOpciones extends StatelessWidget {
                 UserAccountsDrawerHeader(
                   currentAccountPicture: CircleAvatar(
                     radius: 20.0,
-                    backgroundImage: AssetImage("assets/unnamed.jpg"),
+                    backgroundImage: AssetImage("assets/user.png"),
                   ),
-                  accountName: Text("Eugenio Morocho Cayamcela"),
-                  accountEmail: Text("maneumor@espol.edu.ec"),
+                  accountName: Text("username"),
+                  accountEmail: Text("usernamer@domain.com"),
                   decoration: BoxDecoration(
                     color: Colors.black45,
                   ),

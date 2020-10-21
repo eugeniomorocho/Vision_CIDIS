@@ -100,7 +100,7 @@ class _UploadGalleryState extends State<UploadGallery> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.gallery);
-          var res = await uploadImage(file.path, widget.url,  widget.username);
+          var res = await uploadImage(file.path, widget.url, widget.username);
 
           if(res == 200){
             displayDialog(context, "Success", "The image has been uploaded");
@@ -121,4 +121,3 @@ class _UploadGalleryState extends State<UploadGallery> {
     );
   }
 }
-

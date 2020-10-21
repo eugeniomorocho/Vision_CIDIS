@@ -46,7 +46,7 @@ class _UploadCameraState extends State<UploadCamera> {
   );
 
 
-  Future<int> uploadImage(filename, url, username) async {
+  Future<int> uploadImageCamera(filename, url, username) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.fields['username'] = username;
     request.files.add(await http.MultipartFile.fromPath('picture', filename));
@@ -69,7 +69,6 @@ class _UploadCameraState extends State<UploadCamera> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
 
             Container(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
@@ -99,7 +98,8 @@ class _UploadCameraState extends State<UploadCamera> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.camera);
-          var res = await uploadImage(file.path, widget.url, widget.username);
+          Image.file(file);
+          var res = await uploadImageCamera(file.path, widget.url, widget.username);
 
           if(res == 200){
             displayDialog(context, "Success", "The photo has been uploaded");
