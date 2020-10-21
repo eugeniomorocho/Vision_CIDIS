@@ -2,6 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'main.dart';
+import 'package:visioncidis/pantallaprincipal.dart';
+import "package:visioncidis/login.dart";
+
+
+void displayDialog(context, title, text) => showDialog(
+  context: context,
+  builder: (context) =>
+      AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text("Take Another"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UploadCamera()),
+              );
+            },
+          ),
+          new FlatButton(
+            child: Text("Back to Main Menu"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PantallaOpciones()),
+              );
+            },
+          ),
+        ],
+      ),
+);
 
 class UploadCamera extends StatefulWidget {
   //UploadPage({Key key, this.url}) : super(key: key);
@@ -12,11 +44,13 @@ class UploadCamera extends StatefulWidget {
 
 class _UploadCameraState extends State<UploadCamera> {
 
-  Future<String> uploadImage(filename, url) async {
+  Future<int> uploadImage(filename, url, username) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
+    //request.fields['username'] = username;
     request.files.add(await http.MultipartFile.fromPath('picture', filename));
     var res = await request.send();
-    return res.reasonPhrase;
+    //return res.reasonPhrase;
+    return res.statusCode;
   }
 
   String state = "";
@@ -64,9 +98,19 @@ class _UploadCameraState extends State<UploadCamera> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.camera);
-          var res = await uploadImage(file.path, widget.url);
+          var res = await uploadImage(file.path, widget.url, username);
+
+          if(res == 200){
+            displayDialog(context, "Success", "The photo has been uploaded");
+          }
+          else if(res == 201)
+            displayDialog(context, "An Error Occurred", "Try uploading the photo again");
+          else {
+            displayDialog(context, "Error", "An unknown error occurred.");
+          }
+
           setState(() {
-            state = res;
+            state = res as String;
             print(res);
           });
         },

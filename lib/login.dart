@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Padding(
-                padding: EdgeInsets.only(top: 260.0), //To move the textbox and buttons down
+                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.365), //To move the textbox and buttons down
                 child: Column(
                   children: <Widget>[
                     TextField(

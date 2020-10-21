@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:visioncidis/pantallaprincipal.dart';
 import 'main.dart';
+import 'package:visioncidis/pantallaprincipal.dart';
 import "package:visioncidis/login.dart";
-import "login.dart";
 
 
 void displayDialog(context, title, text) => showDialog(
@@ -35,7 +34,6 @@ void displayDialog(context, title, text) => showDialog(
           ],
       ),
 );
-
 
 class UploadGallery extends StatefulWidget {
   //UploadPage({Key key, this.url}) : super(key: key);
