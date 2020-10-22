@@ -35,8 +35,22 @@ class LoginPage extends StatelessWidget {
     // Compara el status (200 ok, ó 401 error).
     // Retorna el JWT si la autenticación es correcta.
     // Retorna "null" en caso de error (i.e. wrong username/password).
-    if(res.statusCode == 200) return res.body;
+    if(res.statusCode == 200){
+      return res.body;
+    }
+    //return res.statusCode;
     return null;
+  }
+
+  Future<int> attemptLogInStatus(String username, String password) async {
+    var res = await http.post(
+        "$SERVER_IP/login",
+        body: {
+          "username": username,
+          "password": password
+        }
+    );
+    return res.statusCode;
   }
 
 
@@ -92,7 +106,14 @@ class LoginPage extends StatelessWidget {
                                       builder: (context) => PantallaOpciones(username)
                                   )
                               );
-                            } else {
+                            }
+
+                            var res = await attemptLogInStatus(username, password);
+                            if(res == 201) // 409 Error: User already created but not active
+                              displayDialog(context, "That username is already registered but not active", "Please check your e-mail to activate your account.");
+                            else if(res == 202) // User already exist
+                              displayDialog(context, "That username is already registered", "Please try to sign up using another username, or log in if you already have an account.");
+                            else {
                               displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
                             }
 

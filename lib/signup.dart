@@ -107,10 +107,14 @@ class SignupPage extends StatelessWidget {
                             //Crea el usuario en backend o genera error
                             else{
                               var res = await attemptSignUp(fullname, username, email, password);
-                              if(res == 201) //201
-                                displayDialog(context, "Success", "The user was created. Please check your e-mail to activate your account.");
-                              else if(res == 409) //409
+                              if(res == 200) // 201 New user created. Check mail.
+                                displayDialog(context, "Success", "The user was created. Please check your e-mail to activate your account. Don't forget to check your spam.");
+                              else if(res == 201) // 409 Error: User already created but not active
+                                displayDialog(context, "That username is already registered but not active", "Please check your e-mail to activate your account.");
+                              else if(res == 202) // User already exist
                                 displayDialog(context, "That username is already registered", "Please try to sign up using another username, or log in if you already have an account.");
+                              else if(res == 205) // User already exist
+                                displayDialog(context, "Prueba", "Paty");
                               else {
                                 displayDialog(context, "Error", "An unknown error occurred.");
                               }
