@@ -109,7 +109,9 @@ class LoginPage extends StatelessWidget {
                             }
 
                             var res = await attemptLogInStatus(username, password);
-                            if(res == 201) // 409 Error: User already created but not active
+                            if(res == 200) // 409 Error: User already created but not active
+                              displayDialog(context, "Welcome to VisionCIDIS", "You are now logged in.");
+                            else if(res == 201) // 409 Error: User already created but not active
                               displayDialog(context, "That username is already registered but not active", "Please check your e-mail to activate your account.");
                             else if(res == 202) // User already exist
                               displayDialog(context, "That username is already registered", "Please try to sign up using another username, or log in if you already have an account.");
