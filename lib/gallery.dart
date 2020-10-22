@@ -45,6 +45,7 @@ class _UploadGalleryState extends State<UploadGallery> {
         ),
   );
 
+
   //Status_code 200 ok / 201 Error
   Future<int> uploadImage(filename, url, username) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
@@ -99,8 +100,20 @@ class _UploadGalleryState extends State<UploadGallery> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+
           var file = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+
+          //*********************************************************
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Center(child: CircularProgressIndicator(),);
+              });
+          //*********************************************************
+
           var res = await uploadImage(file.path, widget.url, widget.username);
+          Navigator.pop(context);
 
           if(res == 200){
             displayDialog(context, "Success", "The image has been uploaded");
@@ -110,6 +123,7 @@ class _UploadGalleryState extends State<UploadGallery> {
           else {
             displayDialog(context, "Error", "An unknown error occurred.");
           }
+
 
           setState(() {
             state = res as String;
