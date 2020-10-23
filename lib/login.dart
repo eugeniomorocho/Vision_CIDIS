@@ -20,6 +20,31 @@ class LoginPage extends StatelessWidget {
         AlertDialog(
             title: Text(title),
             content: Text(text)
+
+        ),
+  );
+
+  void displayDialogTutorial(context, title, text) => showDialog(
+    context: context,
+    builder: (context) =>
+        AlertDialog(
+            title: Text(title),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset("assets/tuto.jpg"),
+                Text(text),
+              FlatButton(
+                child: new Text(
+                    "Agree",
+                     style: TextStyle(color: Colors.blue),
+                      ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          )
         ),
   );
 
@@ -110,7 +135,7 @@ class LoginPage extends StatelessWidget {
 
                             var res = await attemptLogInStatus(username, password);
                             if(res == 200) // 409 Error: User already created but not active
-                              displayDialog(context, "Welcome to VisionCIDIS", "You are now logged in.");
+                              displayDialogTutorial(context, "How to use the App", "Before taking the picture, make sure all the samples are placed in the screen.");
                             else if(res == 201) // 409 Error: User already created but not active
                               displayDialog(context, "That username is already registered but not active", "Please check your e-mail to activate your account.");
                             else if(res == 202) // User already exist

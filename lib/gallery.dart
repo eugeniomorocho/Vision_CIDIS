@@ -100,18 +100,19 @@ class _UploadGalleryState extends State<UploadGallery> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-
           var file = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-
           //*********************************************************
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return Center(child: CircularProgressIndicator(),);
+                return Center(
+                  child: CircularProgressIndicator(
+                  strokeWidth: 6,
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+                  ),
+                );
               });
           //*********************************************************
-
           var res = await uploadImage(file.path, widget.url, widget.username);
           Navigator.pop(context);
 

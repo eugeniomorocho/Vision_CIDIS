@@ -98,8 +98,16 @@ class _UploadCameraState extends State<UploadCamera> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var file = await ImagePicker.pickImage(source: ImageSource.camera);
+          //*********************************************************
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Center(child: CircularProgressIndicator(),);
+              });
+          //*********************************************************
           //Image.file(file);
           var res = await uploadImageCamera(file.path, widget.url, widget.username);
+          Navigator.pop(context);
 
           if(res == 200){
             displayDialog(context, "Success", "The photo has been uploaded");
