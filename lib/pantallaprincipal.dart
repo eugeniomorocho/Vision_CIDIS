@@ -17,6 +17,33 @@ class PantallaOpciones extends StatelessWidget {
 
   //final String jwt;
   //final Map<String, dynamic> payload;
+
+
+  void howToUseTheApp(context, title, text) => showDialog(
+    context: context,
+    builder: (context) =>
+        AlertDialog(
+            title: Text(title),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset("assets/tuto.jpg"),
+                Text(text),
+                FlatButton(
+                  child: new Text(
+                    "Agree",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            )
+        ),
+  );
+
+
   @override
   Widget build(BuildContext context) {
     //String username;
@@ -177,6 +204,14 @@ class PantallaOpciones extends StatelessWidget {
                 // ),
 
                 ListTile(
+                  leading: const Icon(Icons.info_outline),
+                  title: Text('How to use the App'),
+                  onTap: () async {
+                      howToUseTheApp(context, "How to use the App", "Before taking the picture, make sure all the samples are placed in the screen.");
+                  }, //async
+                ),
+
+                ListTile(
                   leading: const Icon(Icons.exit_to_app),
                   title: Text('Sign out'),
                   onTap: () async {
@@ -195,10 +230,9 @@ class PantallaOpciones extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage()),
                     );
-
-
                   }, //async
                 ),
+
               ],
             ),
           ),
