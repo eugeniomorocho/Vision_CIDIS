@@ -36,10 +36,10 @@ class _ResultsPageState extends State<ResultsPage> {
 
       Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/TEMPLATE.jpg"),
-            fit: BoxFit.fill,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/TEMPLATE.jpg"),
+          //   fit: BoxFit.fill,
+          // ),
         ),
         child: Column(
               children: <Widget>[

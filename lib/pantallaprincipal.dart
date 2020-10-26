@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:visioncidis/main.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'camera.dart';
 import 'gallery.dart';
 import 'login.dart';
@@ -19,7 +20,7 @@ class PantallaOpciones extends StatelessWidget {
   //final Map<String, dynamic> payload;
 
 
-  void howToUseTheApp(context, title, text) => showDialog(
+  void alertDialogImage(context, title, text, image, text_button) => showDialog(
     context: context,
     builder: (context) =>
         AlertDialog(
@@ -27,11 +28,11 @@ class PantallaOpciones extends StatelessWidget {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset("assets/tuto.jpg"),
+                Image.asset(image),
                 Text(text),
                 FlatButton(
                   child: new Text(
-                    "Agree",
+                    text_button,
                     style: TextStyle(color: Colors.blue),
                   ),
                   onPressed: () {
@@ -42,6 +43,41 @@ class PantallaOpciones extends StatelessWidget {
             )
         ),
   );
+
+  void alertDialogAbout(context, title, text, image, text_button) => showDialog(
+    context: context,
+    builder: (context) =>
+        AlertDialog(
+            title: Text(title),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(image),
+                Text(text),
+                FlatButton(
+                  child: new Text(
+                    text_button,
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onPressed:
+                    //Navigator.pop(context);
+                    _launchURL,
+
+                ),
+              ],
+            )
+        ),
+  );
+
+  _launchURL() async {
+    const url = 'http://www.cidis.espol.edu.ec/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 
 
   @override
@@ -183,6 +219,10 @@ class PantallaOpciones extends StatelessWidget {
             ),
           ),
 
+
+
+
+
           drawer: Drawer(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -204,10 +244,18 @@ class PantallaOpciones extends StatelessWidget {
                 // ),
 
                 ListTile(
-                  leading: const Icon(Icons.info_outline),
+                  leading: const Icon(Icons.warning_amber_sharp),
                   title: Text('How to use the App'),
                   onTap: () async {
-                      howToUseTheApp(context, "How to use the App", "Before taking the picture, make sure all the samples are placed in the screen.");
+                    alertDialogImage(context, "How to use the App", "Before taking the picture, make sure all the samples are placed in the screen.", "assets/tuto.jpg", "Agree");
+                  }, //async
+                ),
+
+                ListTile(
+                  leading: const Icon(Icons.info_outline),
+                  title: Text('About'),
+                  onTap: () async {
+                      alertDialogAbout(context, "About", "Vision CIDIS Cont. Release \nVersion 0.10.23 \n\nCentro de Investigación, Desarrollo, e Innovación (CIDIS). \n\nEscuela Superior Politécnica del Litoral, Guayaquil, Ecuador. \n\n2020 All rights reserved.", "assets/logo-CIDIS.jpg", "Go to Website");
                   }, //async
                 ),
 

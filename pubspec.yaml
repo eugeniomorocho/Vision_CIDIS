@@ -27,6 +27,7 @@ dependencies:
   #Added by me:
   http: ^0.12.0+4
   flutter_secure_storage: ^3.3.1+1
+  url_launcher: ^5.4.2
 
   camera:
   path_provider:
