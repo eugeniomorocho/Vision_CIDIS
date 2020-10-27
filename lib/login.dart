@@ -9,9 +9,17 @@ import 'pantallaprincipal.dart';
 
 var username;
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
 
+  @override
+  _LoginPageState createState() {
+    return _LoginPageState();
+  }
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   void displayDialog(context, title, text) => showDialog(
@@ -48,7 +56,6 @@ class LoginPage extends StatelessWidget {
         ),
   );
 
-  // Method para Login con POST Request.
   Future<String> attemptLogIn(String username, String password) async {
     var res = await http.post(
         "$SERVER_IP/login",
@@ -78,6 +85,7 @@ class LoginPage extends StatelessWidget {
     return res.statusCode;
   }
 
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +113,24 @@ class LoginPage extends StatelessWidget {
                     ),
                     TextField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: isPasswordVisible,
                       decoration: InputDecoration(
-                          labelText: 'Password'
+                          labelText: 'Password',
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                              // Based on passwordVisible state choose the icon
+                              isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                // Update the state i.e. toogle the state of passwordVisible variable
+                                setState(() {
+                                  isPasswordVisible
+                                      ? isPasswordVisible = false
+                                      : isPasswordVisible = true;
+                                });
+                        },
+                      ),
                       ),
                     ),
 
