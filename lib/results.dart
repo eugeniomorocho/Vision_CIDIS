@@ -14,7 +14,6 @@ class _ResultsPageState extends State<ResultsPage> {
   Future _loadData() async {
     // perform fetching data delay
     await new Future.delayed(new Duration(seconds: 2));
-
     print("load more");
     // update data and loading status
     setState(() {
@@ -58,8 +57,25 @@ class _ResultsPageState extends State<ResultsPage> {
                 child: ListView.builder(
                   itemCount: items.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text('${items[index]}'),
+                    return Card(
+                      child: ListTile(
+                        leading: Image(image: AssetImage("assets/unnamed.jpg")),
+                        title: Text('${items[index]}'),
+                        subtitle: Text('Results'),
+                        //
+                        // isThreeLine: true,
+                        trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              print('Deleted');
+                            },
+                        ),
+                        //dense: true,
+                        //enabled: false,
+                        onTap: () {
+
+                        },
+                      ),
                     );
                   },
                 ),
