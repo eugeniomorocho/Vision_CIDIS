@@ -6,14 +6,18 @@ import 'camera.dart';
 import 'gallery.dart';
 import 'login.dart';
 import 'results.dart';
+import 'package:http/http.dart' as http;
+import 'package:visioncidis/changepassword.dart';
 
 
 class PantallaOpciones extends StatelessWidget {
-  PantallaOpciones(this.username);
+  PantallaOpciones(this.username, this.jwt, this.user_mail);
   //PantallaOpciones(String username);
 
   //HomePage(this.jwt, this.payload);
   final String username;
+  final String user_mail;
+  final  jwt;
   //final Map<String, dynamic> payload;
 
   //final String jwt;
@@ -96,128 +100,141 @@ class PantallaOpciones extends StatelessWidget {
             backgroundColor: Colors.black,
             centerTitle: true,
           ),
-          body: Container(
-            alignment: Alignment.center, //Centra las cards verticalmente
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/TEMPLATE.jpg"),
-                fit: BoxFit.fill,
+          body: Center(
+            child:
+           FutureBuilder(
+                future: http.read('$SERVER_IP/data',
+                headers: {"Authorization": jwt}),
+                builder: (context, snapshot) =>
+                    snapshot.hasData ?
+            Container(
+              alignment: Alignment.center, //Centra las cards verticalmente
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/TEMPLATE.jpg"),
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
-            child: GridView.count(
-                shrinkWrap: true, //Centra las cards verticalmente
-                crossAxisCount: 2,
-                childAspectRatio: 1.0,
-                padding: const EdgeInsets.all(4.0),
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
-                children: <Widget>[
-                  InkWell( //GestureDetector
-                    onTap: () {
-                      //Do something when pressed the button
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UploadCamera(username:username)),
-                      );
-                    },
-                    child: Card(
-                      color: Colors.white70,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 35.0),
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                              'CAMERA',
-                              style: TextStyle(fontSize: 14.0),
-                            ),
-                            Icon(
-                              Icons.camera_alt,
-                              color: Colors.black,
-                              size: 75.0,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      //Do something when pressed the button
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UploadGallery(username: username)),
-                      );
-                    },
-                    child: Card(
+              child: GridView.count(
+                  shrinkWrap: true, //Centra las cards verticalmente
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.0,
+                  padding: const EdgeInsets.all(4.0),
+                  mainAxisSpacing: 4.0,
+                  crossAxisSpacing: 4.0,
+                  children: <Widget>[
+                    InkWell( //GestureDetector
+                      onTap: () {
+                        //Do something when pressed the button
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UploadCamera(username:username, jwt:jwt, user_mail:user_mail)),
+                        );
+                      },
+                      child: Card(
                         color: Colors.white70,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 35.0),
                           child: Column(
-                              children: <Widget>[
-                                Text(
-                                  'GALLERY',
-                                  style: TextStyle(fontSize: 14.0),
-                                ),
-                                Icon(
-                                  Icons.photo_library,
-                                  color: Colors.black,
-                                  size: 75.0,
-                                ),
-                              ]
-                          ),
-                        )
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      //Do something when pressed the button
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ResultsPage()),
-                      );
-                    },
-                    child: Card(
-                        color: Colors.white70,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 35.0),
-                          child: Column(
-                              children: <Widget>[
-                                Text(
-                                  'RESULTS',
-                                  style: TextStyle(fontSize: 14.0),
-                                ),
-                                Icon(
-                                  Icons.assignment,
-                                  color: Colors.black,
-                                  size: 75.0,
-                                ),
-                              ]
-                          ),
-                        )
-                    ),
-                  ),
-                  Card(
-                      color: Colors.white70,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 35.0),
-                        child: Column(
                             children: <Widget>[
                               Text(
-                                'SETTINGS',
+                                'CAMERA',
                                 style: TextStyle(fontSize: 14.0),
                               ),
                               Icon(
-                                Icons.settings,
+                                Icons.camera_alt,
                                 color: Colors.black,
                                 size: 75.0,
                               ),
-                            ]
+                            ],
+                          ),
                         ),
-                      )
-                  ),
-                ]
-            ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        //Do something when pressed the button
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UploadGallery(username: username, jwt:jwt, user_mail:user_mail)),
+                        );
+                      },
+                      child: Card(
+                          color: Colors.white70,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 35.0),
+                            child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'GALLERY',
+                                    style: TextStyle(fontSize: 14.0),
+                                  ),
+                                  Icon(
+                                    Icons.photo_library,
+                                    color: Colors.black,
+                                    size: 75.0,
+                                  ),
+                                ]
+                            ),
+                          )
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        //Do something when pressed the button
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ResultsPage()),
+                        );
+                      },
+                      child: Card(
+                          color: Colors.white70,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 35.0),
+                            child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'RESULTS',
+                                    style: TextStyle(fontSize: 14.0),
+                                  ),
+                                  Icon(
+                                    Icons.assignment,
+                                    color: Colors.black,
+                                    size: 75.0,
+                                  ),
+                                ]
+                            ),
+                          )
+                      ),
+                    ),
+                    Card(
+                        color: Colors.white70,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 35.0),
+                          child: Column(
+                              children: <Widget>[
+                                Text(
+                                  'SETTINGS',
+                                  style: TextStyle(fontSize: 14.0),
+                                ),
+                                Icon(
+                                  Icons.settings,
+                                  color: Colors.black,
+                                  size: 75.0,
+                                ),
+                              ]
+                          ),
+                        )
+                    ),
+                  ]
+              ),
+            )
+
+               :snapshot.hasError ? Text("An error occurred") : CircularProgressIndicator()
+
           ),
+
+    ),
 
 
 
@@ -232,8 +249,8 @@ class PantallaOpciones extends StatelessWidget {
                     radius: 20.0,
                     backgroundImage: AssetImage("assets/user.png"),
                   ),
-                  accountName: Text("username"),
-                  accountEmail: Text("usernamer@domain.com"),
+                  accountName: Text(username),
+                  accountEmail: Text(user_mail),
                   decoration: BoxDecoration(
                     color: Colors.black45,
                   ),
@@ -250,6 +267,19 @@ class PantallaOpciones extends StatelessWidget {
                     alertDialogImage(context, "How to use the App", "Before taking the picture, make sure all the samples are placed in the screen.", "assets/tuto.jpg", "Agree");
                   }, //async
                 ),
+
+                ListTile(
+                  leading: const Icon(Icons.exit_to_app),
+                  title: Text('Change Password'),
+                  onTap: () async {
+                    Navigator.pop(context); //Cierra el drawer
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChangePasswordPage(username: username,jwt:jwt,user_mail:user_mail)),
+                    );
+                  }, //async
+                ),
+
 
                 ListTile(
                   leading: const Icon(Icons.info_outline),

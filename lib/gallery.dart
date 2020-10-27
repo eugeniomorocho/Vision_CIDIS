@@ -3,11 +3,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:visioncidis/pantallaprincipal.dart';
 import 'main.dart';
+import 'dart:convert';
 
 class UploadGallery extends StatefulWidget {
-  UploadGallery({Key key, this.username}) : super(key: key);
+  UploadGallery({Key key, this.username, this.jwt, this.user_mail}) : super(key: key);
   final String url = '$SERVER_IP/upload';
+
   final String username;
+  final String user_mail;
+  final jwt;
 
   @override
   _UploadGalleryState createState() => _UploadGalleryState();
@@ -37,7 +41,7 @@ class _UploadGalleryState extends State<UploadGallery> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PantallaOpciones(widget.username)),
+                  MaterialPageRoute(builder: (context) => PantallaOpciones(widget.username,widget.jwt,widget.user_mail)),
                 );
               },
             ),
@@ -54,6 +58,8 @@ class _UploadGalleryState extends State<UploadGallery> {
     //******************************
     request.files.add(await http.MultipartFile.fromPath('picture', filename));
     var res = await request.send();
+    final responseJson = json.decode(await res.stream.bytesToString());
+    var valor = responseJson['request'];
     //return res.reasonPhrase;
     return res.statusCode;
   }

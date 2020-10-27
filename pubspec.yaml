@@ -28,8 +28,9 @@ dependencies:
   http: ^0.12.0+4
   flutter_secure_storage: ^3.3.1+1
   url_launcher: ^5.4.2
-  hive: ^1.4.4+1
-  hive_flutter: ^0.3.1
+#  hive: ^1.4.4+1
+#  hive_flutter: ^0.3.1
+  json_annotation: ^2.0.0
 
   camera:
   path_provider:
@@ -45,8 +46,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  hive_generator: ^0.8.1
-  build_runner: ^1.10.3
+#  hive_generator: ^0.8.1
+  build_runner: ^1.0.0 #^1.10.3
+  json_serializable: ^2.0.0
+  url_launcher: ^5.0.1
+  path_provider: ^1.6.8
+  path: ^1.7.0
+  permission_handler: ^5.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

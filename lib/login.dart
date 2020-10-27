@@ -4,8 +4,8 @@ import 'package:visioncidis/forgotpassword.dart';
 import 'package:visioncidis/signup.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
-
 import 'pantallaprincipal.dart';
+import 'dart:convert';
 
 var username;
 
@@ -18,8 +18,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
 
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   void displayDialog(context, title, text) => showDialog(
@@ -71,7 +71,8 @@ class _LoginPageState extends State<LoginPage> {
       return res.body;
     }
     //return res.statusCode;
-    return null;
+    //return null;
+    return res.body;
   }
 
   Future<int> attemptLogInStatus(String username, String password) async {
@@ -144,25 +145,31 @@ class _LoginPageState extends State<LoginPage> {
                             var username = _usernameController.text;
                             var password = _passwordController.text;
 
-                            var jwt = await attemptLogIn(username, password);
+                            final responseJson = json.decode(await attemptLogIn(username, password));
+                            var jwt = responseJson['token'];
+                            var user_mail = responseJson['mail'];
+                            var status_code = responseJson['status_code'];
+
+                            //var jwt = await attemptLogIn(username, password);
                             if(jwt != null) {
                               storage.write(key: "jwt", value: jwt);
+                              storage.write(key: "mail", value: user_mail);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       //builder: (context) => HomePage.fromBase64(jwt)
-                                      builder: (context) => PantallaOpciones(username)
+                                      builder: (context) => PantallaOpciones(username, jwt, user_mail)
                                   )
                               );
                             }
 
-                            var res = await attemptLogInStatus(username, password);
-                            if(res == 200) // 409 Error: User already created but not active
+                            //var res = await attemptLogInStatus(username, password);
+                            if(status_code == 200) // 409 Error: User already created but not active
                               displayDialogTutorial(context, "How to use the App", "Before taking the picture, make sure all the samples are placed in the screen.");
-                            else if(res == 201) // 409 Error: User already created but not active
+                            else if(status_code == 201) // 409 Error: User already created but not active
                               displayDialog(context, "That username is already registered but not active", "Please check your e-mail to activate your account.");
-                            else if(res == 202) // User already exist
-                              displayDialog(context, "That username is already registered", "Please try to sign up using another username, or log in if you already have an account.");
+                            else if(status_code == 202) // User already exist
+                              displayDialog(context, "That username don't exist or the password is incorrect.", "Please try again, or log in if you already have an account.");
                             else {
                               displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
                             }

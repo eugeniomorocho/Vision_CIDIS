@@ -5,9 +5,12 @@ import 'package:visioncidis/pantallaprincipal.dart';
 import 'main.dart';
 
 class UploadCamera extends StatefulWidget {
-  UploadCamera({Key key, this.username}) : super(key: key);
+  UploadCamera({Key key, this.username, this.jwt, this.user_mail}) : super(key: key);
   final String url = '$SERVER_IP/upload';
+
   final String username;
+  final String user_mail;
+  final jwt;
 
   @override
   _UploadCameraState createState() => _UploadCameraState();
@@ -28,7 +31,7 @@ class _UploadCameraState extends State<UploadCamera> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UploadCamera(username: widget.username,)),
+                  MaterialPageRoute(builder: (context) => UploadCamera(username: widget.username)),
                 );
               },
             ),
@@ -37,7 +40,7 @@ class _UploadCameraState extends State<UploadCamera> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PantallaOpciones(widget.username)),
+                  MaterialPageRoute(builder: (context) => PantallaOpciones(widget.username,widget.jwt,widget.user_mail)),
                 );
               },
             ),
@@ -105,7 +108,7 @@ class _UploadCameraState extends State<UploadCamera> {
                 return Center(child: CircularProgressIndicator(),);
               });
           //*********************************************************
-          //Image.file(file);
+          Image.file(file);
           var res = await uploadImageCamera(file.path, widget.url, widget.username);
           Navigator.pop(context);
 

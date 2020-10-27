@@ -10,6 +10,8 @@ const SERVER_IP = 'http://200.126.19.99:5000'; //CIDIS Server
 
 final storage = FlutterSecureStorage();
 
+String user_mail;
+
 void main() {
   runApp(MyApp());
 }
@@ -21,6 +23,12 @@ class MyApp extends StatelessWidget {
     if(jwt == null) return "";
     return jwt;
   }
+
+  Future<String>  usermailOrEmpty() async {
+    var user_mail = await storage.read(key: "mail");
+    return user_mail;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,10 +50,12 @@ class MyApp extends StatelessWidget {
               else {
                 var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
                 if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
-                  var username={payload['username']}; //*****
-                  var usuario = "${payload['username']}"; //*****
+                  //var username={payload['username']}; //*****
+                  //var usuario = "${payload['username']}"; //*****
+                  if (user_mail.toString()==null) user_mail="unkown@com.ec";
+
                   //return HomePage(str, payload); //El original que retornaba el "e-mail" y "Secret Data"
-                  return PantallaOpciones(payload['username']); // Llama a PantallaOpciones si el token está vigente
+                  return PantallaOpciones(payload['username'], str, user_mail); // Llama a PantallaOpciones si el token está vigente
                 }
                 else {
                   return LoginPage();
