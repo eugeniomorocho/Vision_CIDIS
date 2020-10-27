@@ -5,13 +5,22 @@ import 'main.dart';
 import 'package:http/http.dart' as http;
 
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
 
+  @override
+  _SignupPageState createState() {
+    return _SignupPageState();
+  }
+}
+
+class _SignupPageState extends State<SignupPage> {
   final TextEditingController _fullnameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
+  final TextEditingController _usernameController = TextEditingController();
+
+  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
 
   void displayDialog(context, title, text) => showDialog(
     context: context,
@@ -22,7 +31,6 @@ class SignupPage extends StatelessWidget {
         ),
   );
 
-  // Method para SignUp con POST Request.
   Future<int> attemptSignUp(String fullname, String username, String email, String password) async {
     var res = await http.post(
         '$SERVER_IP/signup',
@@ -36,6 +44,8 @@ class SignupPage extends StatelessWidget {
     // Solo retorna el status (201 ok, ó 409 error).
     return res.statusCode;
   }
+
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +85,25 @@ class SignupPage extends StatelessWidget {
                     ),
                     TextField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: isPasswordVisible,
                       decoration: InputDecoration(
-                          labelText: 'Password'
+                          labelText: 'Password',
+                        suffixIcon: IconButton(
+                            icon: Icon(
+
+                            // Based on passwordVisible state choose the icon
+                            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                              color: Theme.of(context).primaryColorDark,
+                            ),
+                            onPressed: () {
+                              // Update the state i.e. toogle the state of passwordVisible variable
+                              setState(() {
+                                isPasswordVisible
+                                    ? isPasswordVisible = false
+                                    : isPasswordVisible = true;
+                              });
+                            },
+                         ),
                       ),
                     ),
 
