@@ -143,7 +143,7 @@ class ChangePasswordPage extends StatelessWidget {
 
                   //Botón attempt LOG IN
                   Container(
-                    margin: const EdgeInsets.only(top: 3.0,right:5),
+                    margin: const EdgeInsets.only(top: 10.0),
                     child: RaisedButton(
                       color: Colors. black,
                       textColor: Colors.white,
@@ -192,20 +192,20 @@ class ChangePasswordPage extends StatelessWidget {
                     ),
 
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top:0.1,left:15),
-                    child: RaisedButton(
-                        color: Colors. black,
-                        textColor: Colors.white,
-                        onPressed: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => PantallaOpciones(username,jwt,user_mail)));
-
-                        },
-                        child: Text("Cancel")
-                    ),
-                  ),
+                  // Container(
+                  //   margin: const EdgeInsets.only(top:0.1,left:15),
+                  //   child: RaisedButton(
+                  //       color: Colors. black,
+                  //       textColor: Colors.white,
+                  //       onPressed: () async {
+                  //         Navigator.push(
+                  //             context,
+                  //             MaterialPageRoute(builder: (context) => PantallaOpciones(username,jwt,user_mail)));
+                  //
+                  //       },
+                  //       child: Text("Cancel")
+                  //   ),
+                  // ),
 
                 ],
               ),
