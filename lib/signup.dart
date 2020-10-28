@@ -134,7 +134,7 @@ class _SignupPageState extends State<SignupPage> {
                             else{
                               var res = await attemptSignUp(fullname, username, email, password);
                               if(res == 200) // New user created. Check mail.
-                                displayDialog(context, "Success", "The user was created. Please check your e-mail to activate your account. In case the code is not in your inbox, check your spam.");
+                                displayDialog(context, "Success", "The user was created. Please check your e-mail to activate your account. In case the activation e-mail is not in your inbox, check your spam.");
                               else if(res == 201) // Error: User already created but not active
                                 displayDialog(context, "That username is already registered but not active", "Please check your e-mail to activate your account.");
                               else if(res == 202) // User already exist

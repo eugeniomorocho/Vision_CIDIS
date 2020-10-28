@@ -260,16 +260,22 @@ class PantallaOpciones extends StatelessWidget {
                 //   onTap: () {},
                 // ),
 
+
                 ListTile(
-                  leading: const Icon(Icons.warning_amber_sharp),
-                  title: Text('How to use the App'),
+                  leading: const Icon(Icons.language_outlined),
+                  title: Text('Language'),
                   onTap: () async {
-                    alertDialogImage(context, "How to use the App", "Before taking the picture, make sure all the samples are placed in the screen.", "assets/tuto.jpg", "Agree");
+                    Navigator.pop(context); //Cierra el drawer
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => ChangePasswordPage(username: username,jwt:jwt,user_mail:user_mail)),
+                    // );
                   }, //async
                 ),
 
+
                 ListTile(
-                  leading: const Icon(Icons.exit_to_app),
+                  leading: const Icon(Icons.vpn_key_outlined),
                   title: Text('Change Password'),
                   onTap: () async {
                     Navigator.pop(context); //Cierra el drawer
@@ -277,6 +283,15 @@ class PantallaOpciones extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => ChangePasswordPage(username: username,jwt:jwt,user_mail:user_mail)),
                     );
+                  }, //async
+                ),
+
+
+                ListTile(
+                  leading: const Icon(Icons.warning_amber_sharp),
+                  title: Text('How to use the App'),
+                  onTap: () async {
+                    alertDialogImage(context, "How to use the App", "Before taking the picture, make sure all the samples are placed in the screen.", "assets/tuto.jpg", "Agree");
                   }, //async
                 ),
 
