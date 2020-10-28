@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
     return res.statusCode;
   }
 
-  bool isPasswordVisible = false;
+  bool isPasswordVisible = true;
 
   @override
   Widget build(BuildContext context) {
