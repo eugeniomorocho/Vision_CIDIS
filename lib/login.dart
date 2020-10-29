@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                             else if(status_code == 201) // 409 Error: User already created but not active
                               displayDialog(context, "That username is already registered but not active", "Please check your e-mail to activate your account.");
                             else if(status_code == 202) // User already exist
-                              displayDialog(context, "That username don't exist or the password is incorrect.", "Please try again, or log in if you already have an account.");
+                              displayDialog(context, "That username does not exist, or the password is incorrect.", "Please try again with the correct credentials.");
                             else {
                               displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
                             }

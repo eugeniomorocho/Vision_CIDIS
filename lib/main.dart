@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:convert' show json, base64, ascii;
-
 import 'login.dart';
 import 'pantallaprincipal.dart';
 
 //const SERVER_IP = 'http://192.168.1.5:3000';
 const SERVER_IP = 'http://200.126.19.99:5000'; //CIDIS Server
-
 final storage = FlutterSecureStorage();
-
 String user_mail;
 
-void main() {
+void main() async {
+  // We get the current app directory
+  WidgetsFlutterBinding.ensureInitialized();
+  final appDocDir = await getApplicationDocumentsDirectory();
+  // We initialize Hive and we give him the current path
+  Hive.init(appDocDir.path);
+  // Open Box
+  var box = await Hive.openBox('image');
+
+  //await Hive.initFlutter();
   runApp(MyApp());
 }
 
