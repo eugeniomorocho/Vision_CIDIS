@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+
 
 class ResultsPage extends StatefulWidget {
+  ResultsPage({ this.request_number, this.file});
+  final String request_number;
+  final String file;
 
   @override
-  _ResultsPageState createState() => _ResultsPageState();
+  _ResultsPageState createState() {
+    return _ResultsPageState();
+  }
 }
 
 class _ResultsPageState extends State<ResultsPage> {
@@ -11,23 +18,31 @@ class _ResultsPageState extends State<ResultsPage> {
   List<String> items = ['item 1', 'item 2', ];
   bool isLoading = false;
 
+  final percentage = 00.00;
+
   Future _loadData() async {
+
     // perform fetching data delay
     await new Future.delayed(new Duration(seconds: 2));
     print("load more");
     // update data and loading status
-    setState(() {
+      setState(() {
       items.addAll( ['item 1']);
       print('items: '+ items.toString());
       isLoading = false;
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Results"),
+        title: Column(
+          children: [
+            Text("Results"),
+          ],
+        ),
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
@@ -59,16 +74,42 @@ class _ResultsPageState extends State<ResultsPage> {
                   itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
-                        leading: Image(image: AssetImage("assets/unnamed.jpg")),
+                        leading: Image(image: AssetImage("assets/tuto.jpg")),
                         title: Text('${items[index]}'),
-                        subtitle: Text('Results'),
+                        subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Good grains: $percentage%'),
+                            Text('Bad grains: $percentage%'),
+                            Text('Rubbish: $percentage%'),
+                          ],
+                        ),
                         //
                         // isThreeLine: true,
-                        trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              print('Deleted');
-                            },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.share_outlined,
+                                size: 20.0,
+                                //color: Colors.brown[900],
+                              ),
+                              onPressed: () {
+                                print('Share');
+                              },
+                            ),
+                            IconButton(
+                                icon: Icon(
+                                  Icons.delete_outline,
+                                  size: 20.0,
+                                  //color: Colors.pink,
+                                ),
+                                onPressed: () {
+                                  print('Deleted');
+                                },
+                            ),
+                          ],
                         ),
                         //dense: true,
                         //enabled: false,

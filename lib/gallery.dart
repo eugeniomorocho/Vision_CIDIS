@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:visioncidis/pantallaprincipal.dart';
+import 'package:visioncidis/results.dart';
 import 'main.dart';
 import 'dart:convert';
+import 'package:hive/hive.dart';
 
 class UploadGallery extends StatefulWidget {
   UploadGallery({Key key, this.username, this.jwt, this.user_mail}) : super(key: key);
@@ -13,9 +15,29 @@ class UploadGallery extends StatefulWidget {
   final String user_mail;
   final jwt;
 
+
   @override
   _UploadGalleryState createState() => _UploadGalleryState();
 }
+
+
+// class User {
+//   final String username;
+//   final String user_mail;
+//
+//   User(this.username, this.user_mail);
+//
+//   User.fromJson(Map<String, dynamic> json)
+//       : username = json['name'],
+//         user_mail = json['email'];
+//
+//   Map<String, dynamic> toJson() =>
+//       {
+//         'name': username,
+//         'email': user_mail,
+//       };
+// }
+
 
 class _UploadGalleryState extends State<UploadGallery> {
 
@@ -51,15 +73,15 @@ class _UploadGalleryState extends State<UploadGallery> {
 
 
   //Status_code 200 ok / 201 Error
-  Future<int> uploadImage(filename, url, username) async {
+  Future<int> uploadImage(file, url, username) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     //****************************** Para enviar el username con la foto
     request.fields['username'] = username;
     //******************************
-    request.files.add(await http.MultipartFile.fromPath('picture', filename));
+    request.files.add(await http.MultipartFile.fromPath('picture', file));
     var res = await request.send();
     final responseJson = json.decode(await res.stream.bytesToString());
-    var valor = responseJson['request'];
+    var request_number = responseJson['request'];
     //return res.reasonPhrase;
     return res.statusCode;
   }
@@ -106,7 +128,7 @@ class _UploadGalleryState extends State<UploadGallery> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          var file = await ImagePicker.pickImage(source: ImageSource.gallery);
+          var fileFromGallery = await ImagePicker.pickImage(source: ImageSource.gallery);
           //*********************************************************
           showDialog(
               context: context,
@@ -119,11 +141,13 @@ class _UploadGalleryState extends State<UploadGallery> {
                 );
               });
           //*********************************************************
-          var res = await uploadImage(file.path, widget.url, widget.username);
+          var res = await uploadImage(fileFromGallery.path, widget.url, widget.username);
           Navigator.pop(context);
 
           if(res == 200){
             displayDialog(context, "Success", "The image has been uploaded");
+            //Send image to results
+
           }
           else if(res == 201)
             displayDialog(context, "An Error Occurred", "Try uploading the image again");

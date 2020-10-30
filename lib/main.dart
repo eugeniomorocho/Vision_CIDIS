@@ -18,7 +18,7 @@ void main() async {
   // We initialize Hive and we give him the current path
   Hive.init(appDocDir.path);
   // Open Box
-  var box = await Hive.openBox('image');
+  var box = await Hive.openBox('basededatos');
 
   //await Hive.initFlutter();
   runApp(MyApp());
@@ -61,6 +61,7 @@ class MyApp extends StatelessWidget {
                   //var username={payload['username']}; //*****
                   //var usuario = "${payload['username']}"; //*****
                   if (user_mail.toString()==null) user_mail="unkown@com.ec";
+                  if (username.toString()==null) username="unknown";
 
                   //return HomePage(str, payload); //El original que retornaba el "e-mail" y "Secret Data"
                   return PantallaOpciones(payload['username'], str, user_mail); // Llama a PantallaOpciones si el token está vigente

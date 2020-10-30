@@ -11,7 +11,7 @@ import 'pantallaprincipal.dart';
 var username,password,newpassword;
 
 class ChangePasswordPage extends StatelessWidget {
-  ChangePasswordPage( { this.username, this.user_mail, this.jwt});
+  ChangePasswordPage({ this.username, this.user_mail, this.jwt});
   final String username,user_mail;
   //final Map<String, dynamic> payload;
 
